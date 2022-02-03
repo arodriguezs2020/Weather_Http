@@ -16,15 +16,15 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     var clima = Clima()
-    var textViewCiudad : TextView?= null
-    var textViewTemp : TextView?= null
-    var textViewHumedad : TextView?= null
-    var textViewPresion : TextView?= null
-    var textViewViento : TextView?= null
-    var textViewSunset : TextView?= null
-    var textViewSunrise : TextView?= null
-    var textViewUpdate : TextView?= null
-    var textViewNube : TextView?= null
+    var textViewCiudad: TextView? = null
+    var textViewTemp: TextView? = null
+    var textViewHumedad: TextView? = null
+    var textViewPresion: TextView? = null
+    var textViewViento: TextView? = null
+    var textViewSunset: TextView? = null
+    var textViewSunrise: TextView? = null
+    var textViewUpdate: TextView? = null
+    var textViewNube: TextView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,16 +46,14 @@ class MainActivity : AppCompatActivity() {
 
     fun renderClimaDatos(ciudad: String) {
         val climaTask = ClimaTask()
-        climaTask.execute(*arrayOf(ciudad + "&APPID="+ "d0b874ce2d41c297d218205813f2c50d" + "&units=metric"))
+        climaTask.execute(*arrayOf(ciudad + "&appid=" + "d0b874ce2d41c297d218205813f2c50d" + "&units=metric"))
     }
 
     private inner class ClimaTask : AsyncTask<String, Void, Clima>() {
 
         override fun doInBackground(vararg p0: String?): Clima {
-
             val datos = HttpClientClima().getWeatherData(p0[0])
             clima = JSONParseClima.getWeather(datos)!!
-
             return clima
         }
 
@@ -78,8 +76,8 @@ class MainActivity : AppCompatActivity() {
             textViewSunset?.text = "Puesta del Sol: " + puesta
             textViewSunrise?.text = "Amanecer: " + amanecer
             textViewUpdate?.text = "Ultima actualización: " + actualizar
-            textViewNube?.text = "Nube: " + clima.condicionActual.condicion + "(" + clima.condicionActual.descripcion + ")"
+            textViewNube?.text =
+                "Nube: " + clima.condicionActual.condicion + "(" + clima.condicionActual.descripcion + ")"
         }
-
     }
 }

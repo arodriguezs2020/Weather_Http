@@ -8,7 +8,7 @@ import org.json.JSONObject
 
 object JSONParseClima {
 
-    fun getWeather(data: String) : Clima? {
+    fun getWeather(data: String): Clima? {
         val clima = Clima()
 
         try {
@@ -20,7 +20,7 @@ object JSONParseClima {
             lugar.lon = Utils.getFloat("lon", coordObject)
 
             val sysObj = Utils.getObject("sys", jsonObject)
-            lugar.pais = Utils.getString("country",sysObj)
+            lugar.pais = Utils.getString("country", sysObj)
             lugar.ultimaActualizacion = Utils.getLong("dt", jsonObject)
             lugar.amanecer = Utils.getLong("sunrise", sysObj)
             lugar.puestaSol = Utils.getLong("sunset", sysObj)
@@ -30,7 +30,7 @@ object JSONParseClima {
             val mainObj = Utils.getObject("main", jsonObject)
             clima.condicionActual.humedad = Utils.getFloat("humidity", mainObj)
             clima.condicionActual.temperatura = Utils.getDouble("temp", mainObj)
-            clima.condicionActual.presion = Utils.getFloat("pressure",mainObj)
+            clima.condicionActual.presion = Utils.getFloat("pressure", mainObj)
             clima.condicionActual.maxTemp = Utils.getFloat("temp_max", mainObj)
             clima.condicionActual.minTemp = Utils.getFloat("temp_min", mainObj)
 
