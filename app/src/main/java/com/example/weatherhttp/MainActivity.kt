@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun doInBackground(vararg p0: String?): Clima {
             val datos = HttpClientClima().getWeatherData(p0[0])
-            clima = JSONParseClima.getWeather(datos)!!
+            clima = JSONParseClima.getWeather(datos)!! // Falla aquí porque da null. No me coge los datos de la API
             return clima
         }
 
