@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/paisaje"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textViewCiudad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="42dp"
+        android:text="Merida,Mx"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/imageViewIcon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageViewIcon"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="103dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="99dp"
+        android:background="#fff"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewViento"
+        app:layout_constraintEnd_toStartOf="@+id/textViewTemp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_editor_absoluteX="56dp"
+        app:layout_editor_absoluteY="61dp" />
+
+    <TextView
+        android:id="@+id/textViewTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="167dp"
+        android:padding="3dp"
+        android:text="15 C"
+        android:textSize="15pt"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageViewIcon"
+        app:layout_constraintTop_toTopOf="@+id/imageViewIcon"
+        app:layout_editor_absoluteX="150dp"
+        app:layout_editor_absoluteY="80dp" />
+
+    <TextView
+        android:id="@+id/textViewViento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="256dp"
+        android:padding="3dp"
+        android:text="Viento"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_editor_absoluteX="56dp"
+        app:layout_editor_absoluteY="171dp" />
+
+    <TextView
+        android:id="@+id/textViewNube"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:padding="3dp"
+        android:text="Nube"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/textViewViento"
+        app:layout_constraintTop_toBottomOf="@+id/textViewViento"
+        app:layout_editor_absoluteX="56dp"
+        app:layout_editor_absoluteY="216dp" />
+
+    <TextView
+        android:id="@+id/textViewPresion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:padding="3dp"
+        android:text="Presion"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/textViewNube"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNube"
+        app:layout_editor_absoluteX="56dp"
+        app:layout_editor_absoluteY="263dp" />
+
+    <TextView
+        android:id="@+id/textViewHumedad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:padding="3dp"
+        android:text="Humedad"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/textViewPresion"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPresion" />
+
+    <TextView
+        android:id="@+id/textViewSunset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:padding="3dp"
+        android:text="Amanecer"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/textViewSunrise"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSunrise" />
+
+    <TextView
+        android:id="@+id/textViewSunrise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:padding="3dp"
+        android:text="Puesta de Sol"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/textViewHumedad"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHumedad" />
+
+    <TextView
+        android:id="@+id/textViewUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="18dp"
+        android:padding="3dp"
+        android:text="Uilima actualización"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/textViewSunset"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSunset" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
