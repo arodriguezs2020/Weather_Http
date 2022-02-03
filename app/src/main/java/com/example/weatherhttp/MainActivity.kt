@@ -1,13 +1,23 @@
 package com.example.weatherhttp
 
+import Util.Utils
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import data.HttpClientClima
 import data.JSONParseClima
 import model.Clima
+import org.apache.http.HttpStatus
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.DefaultHttpClient
+import java.io.IOException
+import java.io.InputStream
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.util.*
@@ -25,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     var textViewSunrise: TextView? = null
     var textViewUpdate: TextView? = null
     var textViewNube: TextView? = null
+    var imageViewIcon: ImageView? = null;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,20 +51,67 @@ class MainActivity : AppCompatActivity() {
         textViewSunrise = findViewById(R.id.textViewSunrise)
         textViewUpdate = findViewById(R.id.textViewUpdate)
         textViewNube = findViewById(R.id.textViewNube)
+        imageViewIcon = findViewById(R.id.imageViewIcon)
 
-        renderClimaDatos("Merida,MX")
+        renderClimaDatos("Villahermosa,MX")
     }
 
     fun renderClimaDatos(ciudad: String) {
         val climaTask = ClimaTask()
-        climaTask.execute(*arrayOf(ciudad + "&appid=" + "d0b874ce2d41c297d218205813f2c50d" + "&units=metric"))
+        climaTask.execute(*arrayOf(ciudad + "&appid=" + "86c43f662d4f86b2b8a54d1ef56b6a98"))
+    }
+
+    private inner class DescargarImagenAsync : AsyncTask<String, Void, Bitmap>() {
+        override fun doInBackground(vararg p0: String?): Bitmap {
+            return descargarImagen(p0[0] as String)
+        }
+
+        override fun onPostExecute(result: Bitmap?) {
+            imageViewIcon?.setImageBitmap(result)
+        }
+
+        fun descargarImagen(codigo : String) : Bitmap {
+
+            val cliente = DefaultHttpClient()
+            val getRequest = HttpGet(Utils.ICON_URL + codigo + ".png")
+
+            try {
+                val response = cliente.execute(getRequest)
+
+                val statusCodigo = response.statusLine.statusCode
+
+                if (statusCodigo != HttpStatus.SC_OK) {
+                    Log.e("DescargaImagen", "Error: " + statusCodigo)
+                    return null!!
+                }
+
+                val entity = response.entity
+
+                if (entity != null) {
+                    var inputStream : InputStream? = entity.content
+
+                    val bitmap : Bitmap = BitmapFactory.decodeStream(inputStream)
+                    return bitmap
+                }
+
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            return null!!
+        }
     }
 
     private inner class ClimaTask : AsyncTask<String, Void, Clima>() {
 
+        @SuppressLint("WrongThread")
         override fun doInBackground(vararg p0: String?): Clima {
             val datos = HttpClientClima().getWeatherData(p0[0])
             clima = JSONParseClima.getWeather(datos)!! // Falla aquí porque da null. No me coge los datos de la API
+
+            clima.icon = clima.condicionActual.icono
+
+            DescargarImagenAsync().execute(clima.icon)
+
             return clima
         }
 

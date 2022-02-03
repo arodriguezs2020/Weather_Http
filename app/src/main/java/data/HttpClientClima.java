@@ -16,7 +16,6 @@ public class HttpClientClima {
         InputStream inputStream = null;
 
         try {
-
             connection = (HttpURLConnection) (new URL(Utils.INSTANCE.getBASE_URL() + lugar)).openConnection();
             connection.setRequestMethod("GET");
             connection.setDoInput(true);
@@ -39,7 +38,6 @@ public class HttpClientClima {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 }

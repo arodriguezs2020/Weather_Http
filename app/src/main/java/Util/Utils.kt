@@ -6,8 +6,8 @@ import kotlin.jvm.Throws
 
 object Utils {
 
-    val BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q"
-    val ICON_URL = "http://openweathermap.org/img/w/"
+    val BASE_URL = "https://api.openweathermap.org/data/2.5/weather?q="
+    val ICON_URL = "https://openweathermap.org/img/w/"
 
     @Throws(JSONException::class)
     fun getObject(tagName: String, jsonObject: JSONObject): JSONObject {
