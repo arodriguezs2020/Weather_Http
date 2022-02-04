@@ -20,14 +20,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:background="@drawable/images"
         android:id="@+id/imageViewIcon"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginStart="56dp"
         android:layout_marginTop="103dp"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="99dp"
-        android:background="#fff"
         app:layout_constraintBottom_toBottomOf="@+id/textViewViento"
         app:layout_constraintEnd_toStartOf="@+id/textViewTemp"
         app:layout_constraintStart_toStartOf="parent"

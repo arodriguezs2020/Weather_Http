@@ -1,0 +1,12 @@
+package com.example.weatherhttp
+
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Url
+
+interface DataService {
+
+    @GET
+    fun downloadFileUseingUrl(@Url fileUrl: String) : Call<ResponseBody>
+}

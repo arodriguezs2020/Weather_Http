@@ -1,28 +1,31 @@
 package com.example.weatherhttp
 
-import Util.Utils
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.text.InputType
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import data.HttpClientClima
 import data.JSONParseClima
+import data.PreferenceCiudad
 import model.Clima
-import org.apache.http.HttpStatus
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.impl.client.DefaultHttpClient
-import java.io.IOException
-import java.io.InputStream
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.util.*
 
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     var clima = Clima()
@@ -35,12 +38,14 @@ class MainActivity : AppCompatActivity() {
     var textViewSunrise: TextView? = null
     var textViewUpdate: TextView? = null
     var textViewNube: TextView? = null
-    var imageViewIcon: ImageView? = null;
+    var imageViewIcon: ImageView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val ciudadPreferece = PreferenceCiudad(this)
 
         textViewCiudad = findViewById(R.id.textViewCiudad)
         textViewTemp = findViewById(R.id.textViewTemp)
@@ -53,68 +58,46 @@ class MainActivity : AppCompatActivity() {
         textViewNube = findViewById(R.id.textViewNube)
         imageViewIcon = findViewById(R.id.imageViewIcon)
 
-        renderClimaDatos("Villahermosa,MX")
+        ciudadPreferece.ciudad?.let { renderClimaDatos(it) }
+
+        // funDownloadImage()
+
     }
 
     fun renderClimaDatos(ciudad: String) {
         val climaTask = ClimaTask()
-        climaTask.execute(*arrayOf(ciudad + "&appid=" + "86c43f662d4f86b2b8a54d1ef56b6a98"))
+        climaTask.execute((ciudad + "&appid=" + "86c43f662d4f86b2b8a54d1ef56b6a98"))
     }
 
-    private inner class DescargarImagenAsync : AsyncTask<String, Void, Bitmap>() {
-        override fun doInBackground(vararg p0: String?): Bitmap {
-            return descargarImagen(p0[0] as String)
-        }
-
-        override fun onPostExecute(result: Bitmap?) {
-            imageViewIcon?.setImageBitmap(result)
-        }
-
-        fun descargarImagen(codigo : String) : Bitmap {
-
-            val cliente = DefaultHttpClient()
-            val getRequest = HttpGet(Utils.ICON_URL + codigo + ".png")
-
-            try {
-                val response = cliente.execute(getRequest)
-
-                val statusCodigo = response.statusLine.statusCode
-
-                if (statusCodigo != HttpStatus.SC_OK) {
-                    Log.e("DescargaImagen", "Error: " + statusCodigo)
-                    return null!!
-                }
-
-                val entity = response.entity
-
-                if (entity != null) {
-                    var inputStream : InputStream? = entity.content
-
-                    val bitmap : Bitmap = BitmapFactory.decodeStream(inputStream)
-                    return bitmap
-                }
-
-            } catch (e: IOException) {
-                e.printStackTrace()
+    private fun funDownloadImage(fichero: String?){
+        val call: Call<ResponseBody> = RetrofitClient.getClient.downloadFileUseingUrl("$fichero.png")
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                val bytes: ByteArray = response.body()!!.bytes()
+                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                imageViewIcon?.setImageBitmap(bitmap)
             }
-            return null!!
-        }
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                throw IllegalAccessError("Ha surgido un problema")
+            }
+        })
     }
 
+    @SuppressLint("StaticFieldLeak")
     private inner class ClimaTask : AsyncTask<String, Void, Clima>() {
 
         @SuppressLint("WrongThread")
         override fun doInBackground(vararg p0: String?): Clima {
             val datos = HttpClientClima().getWeatherData(p0[0])
-            clima = JSONParseClima.getWeather(datos)!! // Falla aquí porque da null. No me coge los datos de la API
+            clima = JSONParseClima.getWeather(datos)!!
 
             clima.icon = clima.condicionActual.icono
-
-            DescargarImagenAsync().execute(clima.icon)
+            funDownloadImage(clima.icon)
 
             return clima
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onPostExecute(result: Clima?) {
             super.onPostExecute(result)
 
@@ -137,5 +120,38 @@ class MainActivity : AppCompatActivity() {
             textViewNube?.text =
                 "Nube: " + clima.condicionActual.condicion + "(" + clima.condicionActual.descripcion + ")"
         }
+    }
+
+    fun mostrarDialog(){
+       val builder = AlertDialog.Builder(this)
+       builder.setTitle("Cambiar Ciudad")
+
+       val ponerCiudad = EditText(this)
+       ponerCiudad.inputType = InputType.TYPE_CLASS_TEXT
+       ponerCiudad.hint = "Merida,MX"
+       builder.setView(ponerCiudad)
+       builder.setPositiveButton("OK") {
+           dialogInterface, i ->
+                val ciudadPreferencia = PreferenceCiudad(this)
+                ciudadPreferencia.ciudad = ponerCiudad.text.toString()
+
+                val ciudadNueva = ciudadPreferencia.ciudad
+                ciudadNueva?.let { renderClimaDatos(it) }
+
+       }.show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item.itemId) {
+            R.id.menuCambiar -> mostrarDialog()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -12,7 +12,6 @@ object JSONParseClima {
         val clima = Clima()
 
         try {
-
             val jsonObject = JSONObject(data)
             val lugar = Lugar()
             val coordObject = Utils.getObject("coord", jsonObject)
